@@ -48,4 +48,49 @@ array.map( element => {
         }
     })
 })
+let numberTable = 1
+let numberTableLine = 1
+let result = numberTable*numberTableLine
+let tablesMultiplications = document.getElementById('tablesMultiplications')
 
+for( let i = 1; i <= 10; i++){
+    let div = document.createElement('div')
+        div.classList.add('table')
+    let tablename = document.createElement('h3')
+        tablename.innerText = `Table de ${numberTable}`
+    let listeTable = document.createElement('ul')
+
+    while( numberTableLine < 11){
+        let listeLine = document.createElement('li')
+        let listeSpan = document.createElement('span')
+            listeSpan.innerText = `${numberTable} x ${numberTableLine} = `
+        let listeInput = document.createElement('input')
+            listeInput.setAttribute('id',`inputValue${numberTable}${numberTableLine}`)
+            listeInput.setAttribute('type','number')
+                        
+        listeTable.appendChild(listeLine)
+        listeLine.appendChild(listeSpan)
+        listeLine.appendChild(listeInput)
+
+        listeInput.addEventListener('change',function(e){
+            e.preventDefault()
+            if(e.target.value > 100 || (/^0/.test(e.target.value))){
+                alert('bad response !!')
+                e.target.value = ''
+            }
+            else{
+                alert('good response !!')
+            }
+        })
+        
+        
+        console.log(listeInput.id)
+        numberTableLine++
+    }
+
+    div.appendChild(tablename)
+    div.appendChild(listeTable)
+    tablesMultiplications.appendChild(div)
+    numberTable++
+    numberTableLine = 1
+}
