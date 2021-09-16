@@ -51,6 +51,8 @@ array.map( element => {
 let numberTable = 1
 let numberTableLine = 1
 let tablesMultiplications = document.getElementById('tablesMultiplications')
+let wrongAnswers = 0
+let globaleNote = 100
 
 for( let i = 1; i <= 10; i++){
     let div = document.createElement('div')
@@ -80,12 +82,17 @@ for( let i = 1; i <= 10; i++){
             if(e.target.value > 100 || (/^0/.test(e.target.value))){
                 listeInput.classList.remove('good')
                 listeInput.classList.add('wrong')
+                listeInput.classList.add('animation')
                 e.target.value = ''
                 console.log('Veuillez saisir une réponse comprise entre 1 et 100 !!')
             }
             else if(e.target.value != result){
                 listeInput.classList.remove('good')
                 listeInput.classList.add('wrong')
+                listeInput.classList.add('animation')
+                listeInput.setAttribute('disabled','')
+                wrongAnswers--
+                console.log(`Vous avez commis ${wrongAnswers} erreurs !!`)
                 console.log(result)
                 console.log('Mauvaise réponse !!')
             }
@@ -93,6 +100,7 @@ for( let i = 1; i <= 10; i++){
                 listeInput.classList.remove('wrong')
                 listeInput.classList.add('good')
                 console.log('Bonne réponse !!')
+                listeInput.setAttribute('disabled','')
             }
         })
         
@@ -105,3 +113,42 @@ for( let i = 1; i <= 10; i++){
     numberTable++
     numberTableLine = 1
 }
+
+globaleNote = (globaleNote)-(wrongAnswers)
+console.log(`Votre note s'élève à : ${globaleNote}
+            vous avez commis ${wrongAnswers} erreurs !!`)
+
+let divButtons = document.createElement('div')
+    divButtons.classList.add('div-buttons')
+
+let btnNote = document.createElement('button')
+    btnNote.classList.add('btn-note')
+    btnNote.innerText = "Obtenir ma note"
+
+let btnHide = document.createElement('button')
+    btnHide.style.display = "none"
+    btnHide.classList.add('btn-note')
+    btnHide.innerText = "Masquer"
+    
+let noteFrame = document.createElement('div')
+    noteFrame.style.display = 'none'
+    noteFrame.innerHTML = `Votre note s'élève à : ${globaleNote}<br>
+    vous avez commis ${wrongAnswers} erreurs !!`
+
+divButtons.appendChild(btnNote)
+divButtons.appendChild(btnHide)
+divButtons.appendChild(noteFrame)
+tablesMultiplications.appendChild(divButtons)
+
+btnNote.addEventListener('click',function(e){
+    btnHide.style.display = "flex"
+    btnNote.style.display = "none"
+    noteFrame.style.display = 'flex'
+})
+btnHide.addEventListener('click',function(e){
+    btnNote.style.display = "flex"
+    btnHide.style.display = "none"
+    noteFrame.style.display = 'none'
+})
+
+console.log(globaleNote)
