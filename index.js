@@ -52,7 +52,23 @@ let numberTable = 1
 let numberTableLine = 1
 let tablesMultiplications = document.getElementById('tablesMultiplications')
 let wrongAnswers = 0
-let globaleNote = 100
+let goodAnswers = 0
+let totalQuestions = 0
+let rate = () => {
+    let note = (goodAnswers*20)/totalQuestions /*Moyenne*/
+    let noteRound = Math.round((goodAnswers*20)/totalQuestions)/*Moyenne arrondie*/
+    let noteRoundPlus = noteRound + 0.75 /*Moyenne arrondie + 0.75*/
+    let noteRoundMoins = noteRound + 0.25 /*Moyenne arrondie + 0.25*/
+    if(note > noteRoundMoins && note < noteRoundPlus ){
+        note = noteRound + 0.5
+        console.log('if : '+note)
+        return note
+    }
+    else{
+        console.log('else : '+noteRound)
+        return noteRound
+    }
+}
 
 for( let i = 1; i <= 10; i++){
     let div = document.createElement('div')
@@ -77,33 +93,18 @@ for( let i = 1; i <= 10; i++){
 
         let result = numberTable*numberTableLine/*Résultat de la ligne*/
 
-        listeInput.addEventListener('change',function(e){
+        listeInput.addEventListener('change',function(e){/*Réponse de l'utilisateur*/
             e.preventDefault()
             if(e.target.value > 100 || (/^0/.test(e.target.value))){
-                listeInput.classList.remove('good')
-                listeInput.classList.add('wrong')
-                listeInput.classList.add('animation')
-                e.target.value = ''
-                console.log('Veuillez saisir une réponse comprise entre 1 et 100 !!')
+                badAnswer(listeInput,'good','wrong','animation',e)
             }
             else if(e.target.value != result){
-                listeInput.classList.remove('good')
-                listeInput.classList.add('wrong')
-                listeInput.classList.add('animation')
-                listeInput.setAttribute('disabled','')
-                wrongAnswers--
-                console.log(`Vous avez commis ${wrongAnswers} erreurs !!`)
-                console.log(result)
-                console.log('Mauvaise réponse !!')
+                wrongAnswer(listeInput,'good','wrong','animation',noteFrame)
             }
             else{
-                listeInput.classList.remove('wrong')
-                listeInput.classList.add('good')
-                console.log('Bonne réponse !!')
-                listeInput.setAttribute('disabled','')
+                goodAnswer(listeInput,'wrong','good',noteFrame)
             }
         })
-        
         numberTableLine++
     }
 
@@ -114,9 +115,36 @@ for( let i = 1; i <= 10; i++){
     numberTableLine = 1
 }
 
-globaleNote = (globaleNote)-(wrongAnswers)
-console.log(`Votre note s'élève à : ${globaleNote}
-            vous avez commis ${wrongAnswers} erreurs !!`)
+function badAnswer(element,removeClass,addClass1,addClass2,event){/*Renvoi un message d'erreur en cas de mauvaise entrée par l'utilisateur.*/
+    element.classList.remove(removeClass)
+    element.classList.add(addClass1)
+    element.classList.add(addClass2)
+    event.target.value = ''
+    console.log('Veuillez saisir une réponse comprise entre 1 et 100 !!')
+}
+function wrongAnswer(element,removeClass,addClass1,addClass2,note){/*Met à jour les mauvaises réponses.*/
+    element.classList.remove(removeClass)
+    element.classList.add(addClass1)
+    element.classList.add(addClass2)
+    element.setAttribute('disabled','')
+    wrongAnswers++
+    totalQuestions++
+    note.innerHTML = `Vous avez <span style="color:green;">${goodAnswers}</span> bonne(s) réponse(s) et avez commis <span style="color:red;">${wrongAnswers}</span> erreur(s) sur <span style="color:blue;">${totalQuestions}</span> question(s).<br>
+    Soit une note de <span style="color:red;">${rate()}/20</span> !!`
+    console.log(wrongAnswers)
+    console.log('Mauvaise réponse !!')
+}
+function goodAnswer(element,removeClass,addClass1,note){/*Met à jour les bonnes réponses.*/
+    element.classList.remove(removeClass)
+    element.classList.add(addClass1)
+    element.setAttribute('disabled','')
+    goodAnswers++
+    totalQuestions++
+    note.innerHTML = `Vous avez <span style="color:green;">${goodAnswers}</span> bonne(s) réponse(s) et avez commis <span style="color:red;">${wrongAnswers}</span> erreur(s) sur <span style="color:blue;">${totalQuestions}</span> question(s).<br>
+    Soit une note de <span style="color:red;">${rate()}/20</span> !!`
+    console.log(goodAnswers)
+    console.log('Bonne réponse !!')
+}
 
 let divButtons = document.createElement('div')
     divButtons.classList.add('div-buttons')
@@ -132,8 +160,8 @@ let btnHide = document.createElement('button')
     
 let noteFrame = document.createElement('div')
     noteFrame.style.display = 'none'
-    noteFrame.innerHTML = `Votre note s'élève à : ${globaleNote}<br>
-    vous avez commis ${wrongAnswers} erreurs !!`
+    noteFrame.innerHTML = `Vous avez <span style="color:green;">${goodAnswers}</span> bonne(s) réponse(s) et avez commis <span style="color:red;">${wrongAnswers}</span> erreur(s) sur <span style="color:blue;">${totalQuestions}</span> question(s).<br>
+    Soit une note de <span style="color:red;">0/20</span> !!`
 
 divButtons.appendChild(btnNote)
 divButtons.appendChild(btnHide)
@@ -143,12 +171,10 @@ tablesMultiplications.appendChild(divButtons)
 btnNote.addEventListener('click',function(e){
     btnHide.style.display = "flex"
     btnNote.style.display = "none"
-    noteFrame.style.display = 'flex'
+    noteFrame.style.display = 'block'
 })
 btnHide.addEventListener('click',function(e){
     btnNote.style.display = "flex"
     btnHide.style.display = "none"
     noteFrame.style.display = 'none'
 })
-
-console.log(globaleNote)
