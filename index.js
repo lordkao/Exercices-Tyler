@@ -50,7 +50,6 @@ array.map( element => {
 })
 let numberTable = 1
 let numberTableLine = 1
-let result = numberTable*numberTableLine
 let tablesMultiplications = document.getElementById('tablesMultiplications')
 
 for( let i = 1; i <= 10; i++){
@@ -67,24 +66,36 @@ for( let i = 1; i <= 10; i++){
         let listeInput = document.createElement('input')
             listeInput.setAttribute('id',`inputValue${numberTable}${numberTableLine}`)
             listeInput.setAttribute('type','number')
+            listeInput.setAttribute('min','0')
+            listeInput.setAttribute('max','100')
                         
         listeTable.appendChild(listeLine)
         listeLine.appendChild(listeSpan)
         listeLine.appendChild(listeInput)
 
+        let result = numberTable*numberTableLine/*Résultat de la ligne*/
+
         listeInput.addEventListener('change',function(e){
             e.preventDefault()
             if(e.target.value > 100 || (/^0/.test(e.target.value))){
-                alert('bad response !!')
+                listeInput.classList.remove('good')
+                listeInput.classList.add('wrong')
                 e.target.value = ''
+                console.log('Veuillez saisir une réponse comprise entre 1 et 100 !!')
+            }
+            else if(e.target.value != result){
+                listeInput.classList.remove('good')
+                listeInput.classList.add('wrong')
+                console.log(result)
+                console.log('Mauvaise réponse !!')
             }
             else{
-                alert('good response !!')
+                listeInput.classList.remove('wrong')
+                listeInput.classList.add('good')
+                console.log('Bonne réponse !!')
             }
         })
         
-        
-        console.log(listeInput.id)
         numberTableLine++
     }
 
