@@ -1,3 +1,34 @@
+let tablesMultiplications = document.getElementById('tablesMultiplications')
+let histoire = document.getElementById('histoire')
+let selection = document.getElementById('selection')
+
+let btnHistoire = document.createElement('button')
+    btnHistoire.innerText = 'histoire'.toUpperCase()
+    btnHistoire.classList.add('btn-matiere')
+let btnMultiplications = document.createElement('button')
+    btnMultiplications.innerText = 'mathématiques'.toUpperCase()
+    btnMultiplications.classList.add('btn-matiere')
+selection.appendChild(btnHistoire)
+selection.appendChild(btnMultiplications)
+
+function displayOn(value1,value2){
+    if(value1.style.display == 'flex'){
+        value1.style.display = 'none'
+        console.log('flex')
+    }
+    else{
+        value1.style.display = 'flex'
+        value2.style.display = 'none'
+    }
+}
+
+btnHistoire.addEventListener('click',function(){
+    displayOn(histoire,tablesMultiplications)
+})
+btnMultiplications.addEventListener('click',function(){
+    displayOn(tablesMultiplications,histoire)
+})
+
 class Question {
     constructor(id,date,btn,check,good,wrong,animation){
         this.id = id
@@ -50,7 +81,6 @@ array.map( element => {
 })
 let numberTable = 1
 let numberTableLine = 1
-let tablesMultiplications = document.getElementById('tablesMultiplications')
 let wrongAnswers = 0
 let goodAnswers = 0
 let totalQuestions = 0
@@ -160,6 +190,7 @@ let btnHide = document.createElement('button')
     
 let noteFrame = document.createElement('div')
     noteFrame.style.display = 'none'
+    noteFrame.style.padding = '1rem'
     noteFrame.innerHTML = `Vous avez <span style="color:green;">${goodAnswers}</span> bonne(s) réponse(s) et avez commis <span style="color:red;">${wrongAnswers}</span> erreur(s) sur <span style="color:blue;">${totalQuestions}</span> question(s).<br>
     Soit une note de <span style="color:red;">0/20</span> !!`
 
